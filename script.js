@@ -295,9 +295,23 @@ window.onclick = function(event) {
 document.querySelectorAll('input, textarea').forEach(input => {
     input.addEventListener('input', function(e) {
         const maxLength = this.getAttribute('maxlength');
-        if (e.target.value.length > maxLength) {
+        if (maxLength && e.target.value.length > maxLength) {
             e.target.value = e.target.value.slice(0, maxLength);
             showNotification(`Maximum length is ${maxLength} characters`, 'error');
+        }
+    });
+});
+
+// Initialize color inputs with proper format
+document.getElementById('qr-color').value = '#000000';
+document.getElementById('bg-color').value = '#FFFFFF';
+
+// Add color input validation
+document.querySelectorAll('input[type="color"]').forEach(input => {
+    input.addEventListener('input', function(e) {
+        if (!/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
+            e.target.value = '#000000';
+            showNotification('Please enter a valid color code', 'error');
         }
     });
 }); 
