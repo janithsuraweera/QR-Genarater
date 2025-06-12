@@ -83,30 +83,30 @@ function generateQR() {
             }
             break;
         case 'email':
-            const email = document.getElementById('qr-email').value;
-            const subject = document.getElementById('qr-email-subject').value;
-            const body = document.getElementById('qr-email-body').value;
-            if (email) {
-                text = `mailto:${email}`;
-                if (subject || body) {
+            const emailAddress = document.getElementById('qr-email').value;
+            const emailSubject = document.getElementById('qr-email-subject').value;
+            const emailBody = document.getElementById('qr-email-body').value;
+            if (emailAddress) {
+                text = `mailto:${emailAddress}`;
+                if (emailSubject || emailBody) {
                     text += '?';
-                    if (subject) text += `subject=${encodeURIComponent(subject)}`;
-                    if (body) text += `${subject ? '&' : ''}body=${encodeURIComponent(body)}`;
+                    if (emailSubject) text += `subject=${encodeURIComponent(emailSubject)}`;
+                    if (emailBody) text += `${emailSubject ? '&' : ''}body=${encodeURIComponent(emailBody)}`;
                 }
             }
             break;
         case 'vcard':
             const name = document.getElementById('vcard-name').value;
             const phone = document.getElementById('vcard-phone').value;
-            const email = document.getElementById('vcard-email').value;
+            const vcardEmail = document.getElementById('vcard-email').value;
             const company = document.getElementById('vcard-company').value;
             const title = document.getElementById('vcard-title').value;
             
-            if (name || phone || email) {
+            if (name || phone || vcardEmail) {
                 text = 'BEGIN:VCARD\nVERSION:3.0\n';
                 if (name) text += `FN:${name}\n`;
                 if (phone) text += `TEL:${phone}\n`;
-                if (email) text += `EMAIL:${email}\n`;
+                if (vcardEmail) text += `EMAIL:${vcardEmail}\n`;
                 if (company) text += `ORG:${company}\n`;
                 if (title) text += `TITLE:${title}\n`;
                 text += 'END:VCARD';
