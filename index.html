@@ -3,20 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator</title>
+    <meta name="description" content="Generate QR codes instantly with our free online QR code generator. Create, customize, and download QR codes in seconds.">
+    <meta name="theme-color" content="#2563eb">
+    <title>QR Code Generator - Create QR Codes Instantly</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <h1>QR Code Generator</h1>
+        <p class="subtitle">Create QR codes instantly for any text or URL</p>
+        
         <div class="form-container">
-            <input type="text" id="qr-text" placeholder="Enter your text here">
-            <button onclick="generateQR()">Generate QR Code</button>
+            <input type="text" 
+                   id="qr-text" 
+                   placeholder="Enter your text or URL here"
+                   aria-label="Text to convert to QR code"
+                   maxlength="1000">
+            <button onclick="generateQR()" aria-label="Generate QR code">
+                Generate QR Code
+            </button>
         </div>
-        <div id="qrcode"></div>
-        <button id="download-btn" onclick="downloadQR()" style="display: none;">Download QR Code</button>
+
+        <div id="qrcode" aria-label="Generated QR code"></div>
+        
+        <button id="download-btn" 
+                onclick="downloadQR()" 
+                style="display: none;"
+                aria-label="Download QR code">
+            Download QR Code
+        </button>
     </div>
+
+    <footer class="footer">
+        <p>Made with ❤️ | Free to use</p>
+    </footer>
+
     <script src="script.js"></script>
 </body>
 </html> 
