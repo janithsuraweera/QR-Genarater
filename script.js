@@ -28,9 +28,54 @@ document.querySelectorAll('.type-btn').forEach(btn => {
 // Initialize category selector
 document.querySelectorAll('.category-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+        // Update active button
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        
+        // Update current category
         currentCategory = btn.dataset.category;
+        
+        // Show/hide type buttons based on category
+        const typeButtons = document.querySelectorAll('.type-btn');
+        typeButtons.forEach(typeBtn => {
+            const type = typeBtn.dataset.type;
+            switch(currentCategory) {
+                case 'basic':
+                    if (['text', 'url'].includes(type)) {
+                        typeBtn.style.display = 'flex';
+                    } else {
+                        typeBtn.style.display = 'none';
+                    }
+                    break;
+                case 'social':
+                    if (['whatsapp', 'email'].includes(type)) {
+                        typeBtn.style.display = 'flex';
+                    } else {
+                        typeBtn.style.display = 'none';
+                    }
+                    break;
+                case 'business':
+                    if (['vcard'].includes(type)) {
+                        typeBtn.style.display = 'flex';
+                    } else {
+                        typeBtn.style.display = 'none';
+                    }
+                    break;
+                case 'contact':
+                    if (['phone', 'vcard'].includes(type)) {
+                        typeBtn.style.display = 'flex';
+                    } else {
+                        typeBtn.style.display = 'none';
+                    }
+                    break;
+            }
+        });
+
+        // Reset to first visible type
+        const firstVisibleType = document.querySelector('.type-btn[style="display: flex;"]');
+        if (firstVisibleType) {
+            firstVisibleType.click();
+        }
     });
 });
 
@@ -42,6 +87,11 @@ document.getElementById('qr-size').addEventListener('input', function(e) {
 document.getElementById('logo-upload').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            showNotification('Logo file size should be less than 5MB', 'error');
+            this.value = '';
+            return;
+        }
         const reader = new FileReader();
         reader.onload = function(e) {
             logoImage = e.target.result;
@@ -295,9 +345,26 @@ window.onclick = function(event) {
 document.querySelectorAll('input, textarea').forEach(input => {
     input.addEventListener('input', function(e) {
         const maxLength = this.getAttribute('maxlength');
-        if (e.target.value.length > maxLength) {
+        if (maxLength && e.target.value.length > maxLength) {
             e.target.value = e.target.value.slice(0, maxLength);
             showNotification(`Maximum length is ${maxLength} characters`, 'error');
         }
     });
-}); 
+});
+
+// Initialize color inputs with proper format
+document.getElementById('qr-color').value = '#000000';
+document.getElementById('bg-color').value = '#FFFFFF';
+
+// Add color input validation
+document.querySelectorAll('input[type="color"]').forEach(input => {
+    input.addEventListener('input', function(e) {
+        if (!/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
+            e.target.value = '#000000';
+            showNotification('Please enter a valid color code', 'error');
+        }
+    });
+});
+
+// Initialize the first category
+document.querySelector('.category-btn[data-category="basic"]').click(); 
