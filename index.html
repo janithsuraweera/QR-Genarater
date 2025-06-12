@@ -3,83 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Generate QR codes instantly with our free online QR code generator. Create, customize, and download QR codes in seconds.">
+    <meta name="description" content="Advanced QR Code Generator with customization options. Create, customize, and download QR codes for various purposes.">
     <meta name="theme-color" content="#2563eb">
-    <title>QR Code Generator - Create QR Codes Instantly</title>
+    <title>Advanced QR Code Generator | Create Custom QR Codes</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>QR Code Generator</h1>
-        <p class="subtitle">Create QR codes for links, phone numbers, and WhatsApp</p>
-        
-        <div class="form-container">
-            <div class="type-selector">
-                <button class="type-btn active" data-type="text">Text</button>
-                <button class="type-btn" data-type="url">URL</button>
-                <button class="type-btn" data-type="phone">Phone</button>
-                <button class="type-btn" data-type="whatsapp">WhatsApp</button>
+        <header class="header">
+            <h1>Advanced QR Code Generator</h1>
+            <p class="subtitle">Create customized QR codes for any purpose</p>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="category-section">
+                    <h3>Categories</h3>
+                    <div class="category-list">
+                        <button class="category-btn active" data-category="basic">
+                            <i class="fas fa-qrcode"></i> Basic
+                        </button>
+                        <button class="category-btn" data-category="social">
+                            <i class="fas fa-share-alt"></i> Social
+                        </button>
+                        <button class="category-btn" data-category="business">
+                            <i class="fas fa-briefcase"></i> Business
+                        </button>
+                        <button class="category-btn" data-category="contact">
+                            <i class="fas fa-address-card"></i> Contact
+                        </button>
+                    </div>
+                </div>
+
+                <div class="customization-section">
+                    <h3>Customization</h3>
+                    <div class="customization-options">
+                        <div class="option-group">
+                            <label>QR Color</label>
+                            <input type="color" id="qr-color" value="#000000">
+                        </div>
+                        <div class="option-group">
+                            <label>Background Color</label>
+                            <input type="color" id="bg-color" value="#FFFFFF">
+                        </div>
+                        <div class="option-group">
+                            <label>Size</label>
+                            <input type="range" id="qr-size" min="100" max="400" value="200">
+                            <span id="size-value">200px</span>
+                        </div>
+                        <div class="option-group">
+                            <label>Error Correction</label>
+                            <select id="error-correction">
+                                <option value="L">Low (7%)</option>
+                                <option value="M">Medium (15%)</option>
+                                <option value="Q">Quartile (25%)</option>
+                                <option value="H" selected>High (30%)</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label>Logo</label>
+                            <input type="file" id="logo-upload" accept="image/*">
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div id="text-input" class="input-group">
-                <input type="text" 
-                       id="qr-text" 
-                       placeholder="Enter your text here"
-                       aria-label="Text to convert to QR code"
-                       maxlength="1000">
-            </div>
+            <div class="content-area">
+                <div class="type-selector">
+                    <button class="type-btn active" data-type="text">
+                        <i class="fas fa-font"></i> Text
+                    </button>
+                    <button class="type-btn" data-type="url">
+                        <i class="fas fa-link"></i> URL
+                    </button>
+                    <button class="type-btn" data-type="phone">
+                        <i class="fas fa-phone"></i> Phone
+                    </button>
+                    <button class="type-btn" data-type="whatsapp">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </button>
+                    <button class="type-btn" data-type="email">
+                        <i class="fas fa-envelope"></i> Email
+                    </button>
+                    <button class="type-btn" data-type="vcard">
+                        <i class="fas fa-address-card"></i> vCard
+                    </button>
+                </div>
 
-            <div id="url-input" class="input-group" style="display: none;">
-                <input type="url" 
-                       id="qr-url" 
-                       placeholder="Enter website URL (e.g., https://example.com)"
-                       aria-label="URL to convert to QR code"
-                       maxlength="1000">
-            </div>
+                <div class="form-container">
+                    <div id="text-input" class="input-group">
+                        <input type="text" 
+                               id="qr-text" 
+                               placeholder="Enter your text here"
+                               aria-label="Text to convert to QR code"
+                               maxlength="1000">
+                    </div>
 
-            <div id="phone-input" class="input-group" style="display: none;">
-                <input type="tel" 
-                       id="qr-phone" 
-                       placeholder="Enter phone number (e.g., +94771234567)"
-                       aria-label="Phone number to convert to QR code"
-                       maxlength="20">
-            </div>
+                    <div id="url-input" class="input-group" style="display: none;">
+                        <input type="url" 
+                               id="qr-url" 
+                               placeholder="Enter website URL (e.g., https://example.com)"
+                               aria-label="URL to convert to QR code"
+                               maxlength="1000">
+                    </div>
 
-            <div id="whatsapp-input" class="input-group" style="display: none;">
-                <input type="tel" 
-                       id="qr-whatsapp" 
-                       placeholder="Enter WhatsApp number (e.g., +94771234567)"
-                       aria-label="WhatsApp number to convert to QR code"
-                       maxlength="20">
-                <input type="text" 
-                       id="qr-whatsapp-message" 
-                       placeholder="Optional: Enter message"
-                       aria-label="WhatsApp message"
-                       maxlength="1000">
-            </div>
+                    <div id="phone-input" class="input-group" style="display: none;">
+                        <input type="tel" 
+                               id="qr-phone" 
+                               placeholder="Enter phone number (e.g., +94771234567)"
+                               aria-label="Phone number to convert to QR code"
+                               maxlength="20">
+                    </div>
 
-            <button onclick="generateQR()" aria-label="Generate QR code">
-                Generate QR Code
-            </button>
+                    <div id="whatsapp-input" class="input-group" style="display: none;">
+                        <input type="tel" 
+                               id="qr-whatsapp" 
+                               placeholder="Enter WhatsApp number (e.g., +94771234567)"
+                               aria-label="WhatsApp number to convert to QR code"
+                               maxlength="20">
+                        <input type="text" 
+                               id="qr-whatsapp-message" 
+                               placeholder="Optional: Enter message"
+                               aria-label="WhatsApp message"
+                               maxlength="1000">
+                    </div>
+
+                    <div id="email-input" class="input-group" style="display: none;">
+                        <input type="email" 
+                               id="qr-email" 
+                               placeholder="Enter email address"
+                               aria-label="Email address"
+                               maxlength="100">
+                        <input type="text" 
+                               id="qr-email-subject" 
+                               placeholder="Optional: Enter subject"
+                               aria-label="Email subject"
+                               maxlength="100">
+                        <textarea id="qr-email-body" 
+                                  placeholder="Optional: Enter message"
+                                  aria-label="Email body"
+                                  maxlength="1000"></textarea>
+                    </div>
+
+                    <div id="vcard-input" class="input-group" style="display: none;">
+                        <input type="text" 
+                               id="vcard-name" 
+                               placeholder="Full Name"
+                               aria-label="Full name"
+                               maxlength="100">
+                        <input type="tel" 
+                               id="vcard-phone" 
+                               placeholder="Phone Number"
+                               aria-label="Phone number"
+                               maxlength="20">
+                        <input type="email" 
+                               id="vcard-email" 
+                               placeholder="Email Address"
+                               aria-label="Email address"
+                               maxlength="100">
+                        <input type="text" 
+                               id="vcard-company" 
+                               placeholder="Company (Optional)"
+                               aria-label="Company name"
+                               maxlength="100">
+                        <input type="text" 
+                               id="vcard-title" 
+                               placeholder="Job Title (Optional)"
+                               aria-label="Job title"
+                               maxlength="100">
+                    </div>
+
+                    <button onclick="generateQR()" class="generate-btn" aria-label="Generate QR code">
+                        <i class="fas fa-magic"></i> Generate QR Code
+                    </button>
+                </div>
+
+                <div class="preview-section">
+                    <div id="qrcode" aria-label="Generated QR code"></div>
+                    <div class="preview-controls">
+                        <button id="download-btn" 
+                                onclick="downloadQR()" 
+                                style="display: none;"
+                                class="download-btn"
+                                aria-label="Download QR code">
+                            <i class="fas fa-download"></i> Download QR Code
+                        </button>
+                        <button id="share-btn" 
+                                onclick="shareQR()" 
+                                style="display: none;"
+                                class="share-btn"
+                                aria-label="Share QR code">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div id="qrcode" aria-label="Generated QR code"></div>
-        
-        <button id="download-btn" 
-                onclick="downloadQR()" 
-                style="display: none;"
-                aria-label="Download QR code">
-            Download QR Code
-        </button>
     </div>
 
     <footer class="footer">
-        <p>Made with ❤️ | Free to use</p>
+        <p>Developed by Janith Suraweera | <a href="#" onclick="showAbout()">About</a></p>
     </footer>
+
+    <div id="about-modal" class="modal">
+        <div class="modal-content">
+            <h2>About QR Code Generator</h2>
+            <p>Version 2.0</p>
+            <p>Developed by Janith Suraweera</p>
+            <p>Features:</p>
+            <ul>
+                <li>Multiple QR code types</li>
+                <li>Custom colors and sizes</li>
+                <li>Logo support</li>
+                <li>Error correction</li>
+                <li>Mobile optimized</li>
+            </ul>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

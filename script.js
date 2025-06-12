@@ -1,4 +1,6 @@
 let currentType = 'text';
+let currentCategory = 'basic';
+let logoImage = null;
 
 // Initialize type selector
 document.querySelectorAll('.type-btn').forEach(btn => {
@@ -19,12 +21,38 @@ document.querySelectorAll('.type-btn').forEach(btn => {
         // Clear QR code
         document.getElementById('qrcode').innerHTML = '';
         document.getElementById('download-btn').style.display = 'none';
+        document.getElementById('share-btn').style.display = 'none';
     });
+});
+
+// Initialize category selector
+document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.category;
+    });
+});
+
+// Handle customization options
+document.getElementById('qr-size').addEventListener('input', function(e) {
+    document.getElementById('size-value').textContent = `${e.target.value}px`;
+});
+
+document.getElementById('logo-upload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            logoImage = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
 });
 
 function generateQR() {
     let text = '';
-    const generateBtn = document.querySelector('button');
+    const generateBtn = document.querySelector('.generate-btn');
     const qrcodeDiv = document.getElementById('qrcode');
     
     // Get text based on current type
@@ -54,6 +82,36 @@ function generateQR() {
                 }
             }
             break;
+        case 'email':
+            const email = document.getElementById('qr-email').value;
+            const subject = document.getElementById('qr-email-subject').value;
+            const body = document.getElementById('qr-email-body').value;
+            if (email) {
+                text = `mailto:${email}`;
+                if (subject || body) {
+                    text += '?';
+                    if (subject) text += `subject=${encodeURIComponent(subject)}`;
+                    if (body) text += `${subject ? '&' : ''}body=${encodeURIComponent(body)}`;
+                }
+            }
+            break;
+        case 'vcard':
+            const name = document.getElementById('vcard-name').value;
+            const phone = document.getElementById('vcard-phone').value;
+            const email = document.getElementById('vcard-email').value;
+            const company = document.getElementById('vcard-company').value;
+            const title = document.getElementById('vcard-title').value;
+            
+            if (name || phone || email) {
+                text = 'BEGIN:VCARD\nVERSION:3.0\n';
+                if (name) text += `FN:${name}\n`;
+                if (phone) text += `TEL:${phone}\n`;
+                if (email) text += `EMAIL:${email}\n`;
+                if (company) text += `ORG:${company}\n`;
+                if (title) text += `TITLE:${title}\n`;
+                text += 'END:VCARD';
+            }
+            break;
     }
 
     if (!text) {
@@ -68,24 +126,51 @@ function generateQR() {
     // Clear previous QR code
     qrcodeDiv.innerHTML = '';
     
+    // Get customization options
+    const size = document.getElementById('qr-size').value;
+    const qrColor = document.getElementById('qr-color').value;
+    const bgColor = document.getElementById('bg-color').value;
+    const errorCorrection = document.getElementById('error-correction').value;
+    
     // Generate new QR code with a slight delay for better UX
     setTimeout(() => {
         try {
             new QRCode(qrcodeDiv, {
                 text: text,
-                width: 200,
-                height: 200,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
+                width: parseInt(size),
+                height: parseInt(size),
+                colorDark: qrColor,
+                colorLight: bgColor,
+                correctLevel: QRCode.CorrectLevel[errorCorrection]
             });
 
-            // Show download button with animation
+            // Add logo if exists
+            if (logoImage) {
+                const canvas = qrcodeDiv.querySelector('canvas');
+                const ctx = canvas.getContext('2d');
+                const logoSize = size * 0.2; // 20% of QR code size
+                const logoX = (size - logoSize) / 2;
+                const logoY = (size - logoSize) / 2;
+
+                const logo = new Image();
+                logo.src = logoImage;
+                logo.onload = function() {
+                    ctx.fillStyle = bgColor;
+                    ctx.fillRect(logoX - 5, logoY - 5, logoSize + 10, logoSize + 10);
+                    ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+                };
+            }
+
+            // Show buttons with animation
             const downloadBtn = document.getElementById('download-btn');
+            const shareBtn = document.getElementById('share-btn');
             downloadBtn.style.display = 'inline-block';
+            shareBtn.style.display = 'inline-block';
             downloadBtn.style.opacity = '0';
+            shareBtn.style.opacity = '0';
             setTimeout(() => {
                 downloadBtn.style.opacity = '1';
+                shareBtn.style.opacity = '1';
             }, 100);
 
             showNotification('QR Code generated successfully!', 'success');
@@ -108,12 +193,35 @@ function downloadQR() {
 
     try {
         const link = document.createElement('a');
-        link.download = 'qrcode.png';
+        link.download = `qrcode-${currentType}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
         showNotification('QR Code downloaded successfully!', 'success');
     } catch (error) {
         showNotification('Error downloading QR code. Please try again.', 'error');
+    }
+}
+
+function shareQR() {
+    const canvas = document.querySelector('#qrcode canvas');
+    if (!canvas) {
+        showNotification('Please generate a QR code first', 'error');
+        return;
+    }
+
+    if (navigator.share) {
+        canvas.toBlob(blob => {
+            const file = new File([blob], `qrcode-${currentType}.png`, { type: 'image/png' });
+            navigator.share({
+                title: 'My QR Code',
+                text: 'Check out this QR code I generated!',
+                files: [file]
+            }).catch(error => {
+                showNotification('Error sharing QR code', 'error');
+            });
+        });
+    } else {
+        showNotification('Sharing is not supported on your device', 'error');
     }
 }
 
@@ -165,8 +273,26 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
+function showAbout() {
+    const modal = document.getElementById('about-modal');
+    modal.style.display = 'flex';
+}
+
+function closeModal() {
+    const modal = document.getElementById('about-modal');
+    modal.style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('about-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
+
 // Add input validation
-document.querySelectorAll('input').forEach(input => {
+document.querySelectorAll('input, textarea').forEach(input => {
     input.addEventListener('input', function(e) {
         const maxLength = this.getAttribute('maxlength');
         if (e.target.value.length > maxLength) {
