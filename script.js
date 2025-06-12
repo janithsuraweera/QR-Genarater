@@ -1,8 +1,61 @@
+let currentType = 'text';
+
+// Initialize type selector
+document.querySelectorAll('.type-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Update active button
+        document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Update current type
+        currentType = btn.dataset.type;
+        
+        // Show/hide input fields
+        document.querySelectorAll('.input-group').forEach(group => {
+            group.style.display = 'none';
+        });
+        document.getElementById(`${currentType}-input`).style.display = 'block';
+        
+        // Clear QR code
+        document.getElementById('qrcode').innerHTML = '';
+        document.getElementById('download-btn').style.display = 'none';
+    });
+});
+
 function generateQR() {
-    const text = document.getElementById('qr-text').value;
+    let text = '';
     const generateBtn = document.querySelector('button');
     const qrcodeDiv = document.getElementById('qrcode');
     
+    // Get text based on current type
+    switch(currentType) {
+        case 'text':
+            text = document.getElementById('qr-text').value;
+            break;
+        case 'url':
+            text = document.getElementById('qr-url').value;
+            if (text && !text.startsWith('http://') && !text.startsWith('https://')) {
+                text = 'https://' + text;
+            }
+            break;
+        case 'phone':
+            text = document.getElementById('qr-phone').value;
+            if (text) {
+                text = 'tel:' + text.replace(/[^0-9+]/g, '');
+            }
+            break;
+        case 'whatsapp':
+            const number = document.getElementById('qr-whatsapp').value;
+            const message = document.getElementById('qr-whatsapp-message').value;
+            if (number) {
+                text = 'https://wa.me/' + number.replace(/[^0-9+]/g, '');
+                if (message) {
+                    text += '?text=' + encodeURIComponent(message);
+                }
+            }
+            break;
+    }
+
     if (!text) {
         showNotification('Please enter some text', 'error');
         return;
@@ -113,10 +166,12 @@ function showNotification(message, type = 'info') {
 }
 
 // Add input validation
-document.getElementById('qr-text').addEventListener('input', function(e) {
-    const maxLength = 1000; // Maximum length for QR code content
-    if (e.target.value.length > maxLength) {
-        e.target.value = e.target.value.slice(0, maxLength);
-        showNotification(`Maximum length is ${maxLength} characters`, 'error');
-    }
+document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('input', function(e) {
+        const maxLength = this.getAttribute('maxlength');
+        if (e.target.value.length > maxLength) {
+            e.target.value = e.target.value.slice(0, maxLength);
+            showNotification(`Maximum length is ${maxLength} characters`, 'error');
+        }
+    });
 }); 

@@ -15,14 +15,53 @@
 <body>
     <div class="container">
         <h1>QR Code Generator</h1>
-        <p class="subtitle">Create QR codes instantly for any text or URL</p>
+        <p class="subtitle">Create QR codes for links, phone numbers, and WhatsApp</p>
         
         <div class="form-container">
-            <input type="text" 
-                   id="qr-text" 
-                   placeholder="Enter your text or URL here"
-                   aria-label="Text to convert to QR code"
-                   maxlength="1000">
+            <div class="type-selector">
+                <button class="type-btn active" data-type="text">Text</button>
+                <button class="type-btn" data-type="url">URL</button>
+                <button class="type-btn" data-type="phone">Phone</button>
+                <button class="type-btn" data-type="whatsapp">WhatsApp</button>
+            </div>
+
+            <div id="text-input" class="input-group">
+                <input type="text" 
+                       id="qr-text" 
+                       placeholder="Enter your text here"
+                       aria-label="Text to convert to QR code"
+                       maxlength="1000">
+            </div>
+
+            <div id="url-input" class="input-group" style="display: none;">
+                <input type="url" 
+                       id="qr-url" 
+                       placeholder="Enter website URL (e.g., https://example.com)"
+                       aria-label="URL to convert to QR code"
+                       maxlength="1000">
+            </div>
+
+            <div id="phone-input" class="input-group" style="display: none;">
+                <input type="tel" 
+                       id="qr-phone" 
+                       placeholder="Enter phone number (e.g., +94771234567)"
+                       aria-label="Phone number to convert to QR code"
+                       maxlength="20">
+            </div>
+
+            <div id="whatsapp-input" class="input-group" style="display: none;">
+                <input type="tel" 
+                       id="qr-whatsapp" 
+                       placeholder="Enter WhatsApp number (e.g., +94771234567)"
+                       aria-label="WhatsApp number to convert to QR code"
+                       maxlength="20">
+                <input type="text" 
+                       id="qr-whatsapp-message" 
+                       placeholder="Optional: Enter message"
+                       aria-label="WhatsApp message"
+                       maxlength="1000">
+            </div>
+
             <button onclick="generateQR()" aria-label="Generate QR code">
                 Generate QR Code
             </button>

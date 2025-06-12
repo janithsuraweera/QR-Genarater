@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: 'Inter', Arial, sans-serif;
 }
 
 :root {
@@ -44,19 +44,61 @@ body {
 
 h1 {
     color: var(--primary-color);
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
     font-size: 2rem;
     font-weight: 600;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-size: 1rem;
 }
 
 .form-container {
     margin-bottom: 2rem;
 }
 
-input {
+.type-selector {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.type-btn {
+    background-color: var(--background);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: auto;
+}
+
+.type-btn:hover {
+    background-color: var(--border-color);
+    transform: translateY(-2px);
+}
+
+.type-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.input-group input {
     width: 100%;
     padding: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     border: 2px solid var(--border-color);
     border-radius: 8px;
     font-size: 1rem;
@@ -64,13 +106,13 @@ input {
     color: var(--text-primary);
 }
 
-input:focus {
+.input-group input:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-input::placeholder {
+.input-group input::placeholder {
     color: var(--text-secondary);
 }
 
@@ -150,6 +192,16 @@ button:focus:not(:active)::after {
     background-color: #16a34a;
 }
 
+.footer {
+    position: fixed;
+    bottom: 1rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
 /* Loading animation */
 .loading {
     position: relative;
@@ -197,6 +249,11 @@ button:focus:not(:active)::after {
 
     h1 {
         font-size: 1.5rem;
+    }
+
+    .type-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
     }
 
     button {
